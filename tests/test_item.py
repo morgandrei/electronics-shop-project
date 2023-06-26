@@ -24,12 +24,14 @@ def test_apply_discount(number):
 
 
 def test_string_to_number():
+    """Тест округления числа"""
     assert Item.string_to_number('17') == 17
     assert Item.string_to_number('17.0') == 17
     assert Item.string_to_number('-4.3') == -4
 
 
 def test_new_name_setter(number):
+    """Тест проверки длины наименования"""
     number.name = 'qwerty'
     assert number.name == 'qwerty'
     number.name = 'СуперСмартфон'
@@ -37,5 +39,6 @@ def test_new_name_setter(number):
 
 
 def test_item_instantiate_from_csv():
+    """Тест инициализации экземпляров класса"""
     Item.instantiate_from_csv()
     assert len(Item.all) == 5
