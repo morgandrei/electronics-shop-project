@@ -22,7 +22,6 @@ def test_apply_discount(number):
     assert number.price == 160.0
 
 
-
 def test_string_to_number():
     """Тест округления числа"""
     assert Item.string_to_number('17') == 17
@@ -42,3 +41,13 @@ def test_item_instantiate_from_csv():
     """Тест инициализации экземпляров класса"""
     Item.instantiate_from_csv()
     assert len(Item.all) == 5
+
+
+def test___repr__():
+    item1 = Item("Смартфон", 10000, 20)
+    assert repr(item1) == "Item('Смартфон', 10000, 20)"
+
+
+def test___str__():
+    item1 = Item("Смартфон", 10000, 20)
+    assert str(item1) == 'Смартфон'

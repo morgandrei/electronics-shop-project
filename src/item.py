@@ -19,8 +19,13 @@ class Item:
         self.__name = name
         self.price = price
         self.quantity = quantity
-
         self.all.append(self)
+
+    def __repr__(self):
+        return str(f"{self.__class__.__name__}('{self.__name}', {self.price}, {self.quantity})")
+
+    def __str__(self):
+        return str(self.__name)
 
     def calculate_total_price(self) -> float:
         """
@@ -39,7 +44,7 @@ class Item:
 
     @property
     def name(self) -> str:
-        """геттер названия товара"""
+        """Геттер названия товара"""
         return self.__name
 
     @name.setter
@@ -66,4 +71,3 @@ class Item:
     def string_to_number(num: str) -> int:
         """Статический метод, возвращающий число из числа-строки"""
         return int(float(num))
-
