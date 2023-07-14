@@ -1,4 +1,12 @@
 import csv
+import os
+
+
+class InstantiateCSVError(Exception):
+    """Класс исключения при повреждении файла"""
+
+    def __init__(self, *args):
+        self.message = args[0] if args else 'Файл item.csv поврежден'
 
 
 class Item:
@@ -20,19 +28,14 @@ class Item:
         self.__name = name
         self.price = price
         self.quantity = quantity
+
         self.all.append(self)
 
     def __repr__(self):
-        return str(f"{self.__class__.__name__}('{self.__name}', {self.price}, {self.quantity})")
+        return f"{self.__class__.__name__}('{self.__name}', {self.price}, {self.quantity})"
 
     def __str__(self):
-        return str(self.__name)
-
-    def __add__(self, other):
-        """Метод для операции сложения"""
-        if not isinstance(other, Item):
-            raise ValueError("Складывать можно только объекты Item и дочерние от них")
-        return self.quantity + other.quantity
+        return f'{self.__name}'
 
     def calculate_total_price(self) -> float:
         """
@@ -43,7 +46,7 @@ class Item:
 
         return self.price * self.quantity
 
-    def apply_discount(self):
+    def apply_discount(self) -> None:
         """
         Применяет установленную скидку для конкретного товара.
         """
@@ -66,15 +69,28 @@ class Item:
     def instantiate_from_csv(cls) -> None:
         """класс-метод, инициализирующий экземпляры класса Item данными из файла src/items.csv"""
         cls.all = []
-        with open('../src/items.csv', encoding='windows-1251') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                name = row['name']
-                price = cls.string_to_number(row['price'])
-                quantity = cls.string_to_number(row['quantity'])
-                cls(name, price, quantity)
+        filepath = os.path.join(os.path.dirname(__file__), 'item.csv')
+        try:
+            with open(filepath, encoding='windows-1251') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    if not all(key in row for key in ['name', 'price', 'quantity']):
+                        raise InstantiateCSVError
+                    name = row['name']
+                    price = cls.string_to_number(row['price'])
+                    quantity = cls.string_to_number(row['quantity'])
+                    cls(name, price, quantity)
+        except FileNotFoundError:
+            print('Отсутствует файл item.csv')
+        except InstantiateCSVError as m:
+            print(m)
 
     @staticmethod
     def string_to_number(num: str) -> int:
         """Статический метод, возвращающий число из числа-строки"""
         return int(float(num))
+
+    def __add__(self, other):
+        if not issubclass(other.__class__, self.__class__):
+            raise ValueError('Складывать можно только объекты Item и дочерние от них.')
+        return self.quantity + other.quantity

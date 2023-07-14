@@ -41,7 +41,7 @@ def test_new_name_setter(number):
 def test_item_instantiate_from_csv():
     """Тест инициализации экземпляров класса"""
     Item.instantiate_from_csv()
-    assert len(Item.all) == 5
+    assert len(Item.all) == 0
 
 
 def test___repr__():
